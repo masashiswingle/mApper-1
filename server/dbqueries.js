@@ -145,7 +145,38 @@ module.exports = {
         var results = array.slice(originalLength - numOfItems);
         console.log('shuffleresults', results);
         return results;
-    }
+    },
+
+
+    getScores: function(cb){
+      
+      db.scores.find(function (err, scores) {
+       if (err) {
+        return console.error(err);
+      }
+        cb(scores)
+
+      })
+
+    },
+
+    addScores: function(data, cb) {
+      // add score to database then run callback on results;
+        var newScore = new db.scores({
+          id : data.user,
+          score: data.score
+
+        });
+        console.log(newScore);
+        newScore.save(function(err, resp){
+          if (err) {
+            console.log('issue saving score')
+          } else {
+            console.log('score saved to db')
+          }
+        });
+      }
+
 };
 
 // module.exports = {

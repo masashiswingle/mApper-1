@@ -1,7 +1,6 @@
-angular.module('App', ['ngRoute', 'ngMap', 'Game', 'homePage', 'addToDatabase', 'ui.bootstrap'])
+angular.module('App', ['ngRoute', 'ngMap', 'Game', 'homePage', 'addToDatabase', 'Highscores', 'ui.bootstrap'])
 .config(function($routeProvider){
 	$routeProvider
-
 
 	////david - start - also added homePage depend line 1///
 	.when('/', {
@@ -17,15 +16,21 @@ angular.module('App', ['ngRoute', 'ngMap', 'Game', 'homePage', 'addToDatabase', 
 		templateUrl: 'app/addToDatabase.html',
 		controller: 'addToDatabaseController'
 	})
+	.when('/scores', {
+		templateUrl: 'app/highScores/highscores.html',
+		controller: 'scoreController'
+	})
 	.otherwise({
 		redirectTo: '/game'
 	})
 })
-.controller('mapController', ['$scope', 'Map', function ($scope, Map){
+.controller('mapController', ['$scope', 'Map','scoreFactory', function ($scope, Map, scoreFactory){
 	$scope.count = 0; 
 	$scope.toggle = true;
 	$scope.buttonToggle = true;
 	$scope.incorrect = true;
+	$scope.topScores = [];
+	
 	$scope.compareAnswer = function (answer){
 		console.log(answer.answer)
 		if ($scope.answer === answer.answer){
@@ -35,6 +40,7 @@ angular.module('App', ['ngRoute', 'ngMap', 'Game', 'homePage', 'addToDatabase', 
 			console.log($scope.count);
 			console.log($scope.show);
 		} else {
+			scoreFactory.addScore('SCE', $scope.count)
 			$scope.count = 0;
 			$scope.incorrect = !$scope.incorrect;
 			$scope.buttonToggle = !$scope.buttonToggle;
